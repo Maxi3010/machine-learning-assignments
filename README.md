@@ -2,7 +2,7 @@
 
 > Four assignments completed during the Machine Learning course at **IMC University of Applied Sciences Krems**.
 
-**Author:** Maximilian Knapp · Data Science Student
+**Author:** Maximilian Knapp · Informatics Student
 
 ---
 
