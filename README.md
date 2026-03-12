@@ -1,304 +1,169 @@
-Machine Learning Coursework – University Projects
+# Machine Learning Coursework -- University Projects
 
-This repository contains four machine learning assignments completed during my Machine Learning course at IMC University of Applied Sciences Krems.
+This repository contains four machine learning assignments completed
+during my Machine Learning course at **IMC University of Applied
+Sciences Krems**.
 
 The projects cover fundamental machine learning topics including:
 
-Decision Trees
+-   Decision Trees
+-   Classification Algorithms
+-   Clustering Techniques
+-   Neural Networks / Deep Learning
 
-Classification Algorithms
+All assignments include code, results, and interpretation in the form of
+RMarkdown reports or Jupyter notebooks.
 
-Clustering Techniques
+------------------------------------------------------------------------
 
-Neural Networks / Deep Learning
+# Repository Structure
 
-All assignments include code, results, and interpretation in the form of RMarkdown reports or Jupyter notebooks.
+machine-learning-projects │ ├── decision_trees │ ├── seeds_analysis.Rmd
+│ ├── seeds.R │ └── seeds.csv │ ├── classification_eeg │ ├──
+eeg_eyelid_training.csv │ └── eeg_eyelid_test.csv │ ├── clustering │ ├──
+Mobile_phone_picture.Rmd │ ├── Mobile_phone_picture.html │ ├──
+clustering_analysis_drilling.Rmd │ ├── clustering_analysis_drilling.html
+│ └── drilling.csv │ ├── neural_networks │ ├──
+dry_bean_classification_pytorch_Maximilian.ipynb │ ├──
+dry_bean_classification_tensorflow_Maxmilian.ipynb │ └──
+Lecture_10_Dry_Bean_Dataset.csv │ └── README.md
 
-Repository Structure
-machine-learning-projects
-│
-├── decision_trees
-│   ├── seeds_analysis.Rmd
-│   ├── seeds.R
-│   └── seeds.csv
-│
-├── classification_eeg
-│   ├── eeg_eyelid_training.csv
-│   └── eeg_eyelid_test.csv
-│
-├── clustering
-│   ├── Mobile_phone_picture.Rmd
-│   ├── Mobile_phone_picture.html
-│   ├── clustering_analysis_drilling.Rmd
-│   ├── clustering_analysis_drilling.html
-│   └── drilling.csv
-│
-├── neural_networks
-│   ├── dry_bean_classification_pytorch_Maximilian.ipynb
-│   ├── dry_bean_classification_tensorflow_Maxmilian.ipynb
-│   └── Lecture_10_Dry_Bean_Dataset.csv
-│
-└── README.md
-1️⃣ Decision Trees – Seed Classification
-Objective
+------------------------------------------------------------------------
 
-Train machine learning models capable of distinguishing three different seed types based on geometric measurements.
+# 1. Decision Trees -- Seed Classification
 
-Dataset
+## Objective
 
-The dataset contains measurements such as:
+Train machine learning models capable of distinguishing three different
+seed types based on geometric measurements.
 
-Area
+## Dataset
 
-Perimeter
+Measurements include: - Area - Perimeter - Length - Width - Shape
+features
 
-Length
+File: seeds.csv
 
-Width
+## Methodology
 
-Shape features
+1.  Exploratory Data Analysis (EDA)
+2.  Train/Test split (80/20)
+3.  Train three models:
+    -   Decision tree with default stopping criteria
+    -   Complete decision tree (no stopping rule)
+    -   Pruned decision tree
+4.  Evaluate models using the test dataset.
 
-File:
+## Evaluation Metrics
 
-seeds.csv
-Methodology
+-   Confusion Matrix
+-   Accuracy
+-   Precision
+-   Recall
+-   F1-score
 
-Exploratory Data Analysis (EDA)
+------------------------------------------------------------------------
 
-Train/Test split (80/20)
+# 2. EEG Classification -- Eyelid Detection
 
-Train three decision tree models:
+## Objective
 
-Decision tree with default stopping criteria
+Predict whether a patient's eyelids are open or closed based on EEG
+sensor measurements.
 
-Complete decision tree (no stopping rule)
-
-Pruned decision tree
-
-Evaluate models using the test dataset.
-
-Evaluation Metrics
-
-Confusion Matrix
-
-Accuracy
-
-Precision
-
-Recall
-
-F1-score
-
-An additional experiment evaluates the model performance when using only three features instead of the full dataset.
-
-2️⃣ EEG Classification – Eyelid Detection
-Objective
-
-Train classifiers capable of predicting whether a patient's eyelids are open or closed based on EEG sensor measurements.
-
-Label definition:
-
-0 = open eyelids
+Label definition: 0 = open eyelids\
 1 = closed eyelids
-Dataset
 
-16 numerical EEG features
+## Dataset
 
-1 label column
+-   16 numerical EEG features
+-   1 label column
 
-Files:
+Files: - eeg_eyelid_training.csv - eeg_eyelid_test.csv
 
-eeg_eyelid_training.csv
-eeg_eyelid_test.csv
-Workflow
+## Models Implemented
 
-Data exploration
+-   Decision Trees
+-   Support Vector Machines (SVM)
+-   K-Nearest Neighbors (KNN)
+-   Random Forest
+-   AdaBoost
+-   XGBoost
 
-Data cleaning and preprocessing
+Evaluation metrics: - Accuracy - Precision - Recall - F1 Score
 
-Model training on the training dataset only
+------------------------------------------------------------------------
 
-Evaluation on the test dataset
+# 3. Clustering
 
-Models Implemented
+This assignment contains two clustering tasks.
 
-Decision Trees
+## Task 1 -- Image Color Reduction using K-Means
 
-Support Vector Machines (SVM)
+File: Mobile_phone_picture.Rmd
 
-K-Nearest Neighbors (KNN)
+Objective: Reduce the number of RGB colors in an image using K-Means
+clustering.
 
-Random Forest
+Workflow: 1. Take a picture with a smartphone 2. Resize the image
+(e.g. 256×256) 3. Apply K-Means clustering 4. Use the Elbow Method to
+determine optimal K
 
-AdaBoost
+Outputs: - Original image - WSS elbow plot - Reconstructed images -
+Interpretation
 
-XGBoost
+------------------------------------------------------------------------
 
-Model Comparison
+## Task 2 -- Drilling Machine State Detection
 
-A final table compares all models using:
+Files: - clustering_analysis_drilling.Rmd - drilling.csv
 
-Accuracy
+Problem: A drilling machine operates in several unknown operational
+states. Engineers collected 400 observations with two variables but
+without labels.
 
-Precision
+Goal: 1. Identify the number of machine states 2. Assign each
+observation to a cluster
 
-Recall
+Methods used: - K-Means - Hierarchical Clustering - DBSCAN
 
-F1 Score
+All clustering outcomes are compared to analyze whether they produce
+similar cluster structures.
 
-3️⃣ Clustering
+------------------------------------------------------------------------
 
-This assignment contains two independent clustering tasks.
+# 4. Neural Networks -- Dry Bean Classification
 
-Task 1 – Image Color Reduction using K-Means
+Objective: Train a feed-forward neural network to classify bean types
+using the Dry Bean dataset.
 
-File:
+Dataset: Lecture_10_Dry_Bean_Dataset.csv
 
-Mobile_phone_picture.Rmd
-Objective
+Workflow: 1. Exploratory Data Analysis 2. Data preprocessing 3.
+Train/Test split (80/20) 4. Convert dataset to tensors 5. Train neural
+network models
 
-Reduce the number of RGB colors in an image using K-Means clustering.
+Implementations: - PyTorch - TensorFlow
 
-Each pixel is treated as a data point with three features:
-
-R, G, B
-Workflow
-
-Take a picture with a smartphone
-
-Resize the image (e.g. 256×256)
-
-Apply K-Means clustering to group pixels into color clusters
-
-Use the Elbow Method to determine the optimal number of clusters
-
-Outputs
-
-The report contains:
-
-Original image
-
-WSS (Within Sum of Squares) elbow plot
-
-Reconstructed images with reduced color palettes
-
-Interpretation of results
-
-Task 2 – Drilling Machine State Detection
-
-Files:
-
-clustering_analysis_drilling.Rmd
-drilling.csv
-Problem
-
-A drilling machine operates in several unknown operational states.
-Engineers collected 400 observations of two variables but no labels.
-
-Goal
-
-Use clustering techniques to:
-
-Identify the number of machine states
-
-Assign each observation to a cluster
-
-Methods Applied
-K-Means
-
-Test different K values
-
-Use the Elbow Method
-
-Assign final cluster memberships
-
-Hierarchical Clustering
-
-Test different linkage methods
-
-Analyze dendrogram
-
-Determine clusters by cutting the tree
-
-DBSCAN
-
-Select MinPts
-
-Determine epsilon using k-distance plot
-
-Identify clusters and noise points
-
-Final Analysis
-
-The clustering results from all methods are compared to analyze whether they produce similar cluster structures.
-
-4️⃣ Neural Networks – Dry Bean Classification
-Objective
-
-Train a Feed-Forward Neural Network to classify bean types using the Dry Bean dataset.
-
-Dataset:
-
-Lecture_10_Dry_Bean_Dataset.csv
-Workflow
-
-Exploratory Data Analysis (EDA)
-
-Data preprocessing
-
-Train/Test split (80/20)
-
-Convert data to tensors
-
-Train neural network models
-
-Experiments
-
-Different neural network architectures were tested by varying:
-
-Number of hidden layers
-
-Number of neurons
-
-Learning rate
-
-Optimizers
-
-Examples:
-
-Adam
-SGD
-RMSProp
-Implementations
-
-Two implementations were created:
-
-PyTorch
-TensorFlow
-
-Files:
-
-dry_bean_classification_pytorch_Maximilian.ipynb
+Files: - dry_bean_classification_pytorch_Maximilian.ipynb -
 dry_bean_classification_tensorflow_Maxmilian.ipynb
-Technologies Used
 
-R
+------------------------------------------------------------------------
 
-Python
+# Technologies Used
 
-PyTorch
+-   R
+-   Python
+-   PyTorch
+-   TensorFlow
+-   RMarkdown
+-   Jupyter Notebook
+-   Machine Learning Libraries
 
-TensorFlow
+------------------------------------------------------------------------
 
-RMarkdown
+# Author
 
-Jupyter Notebook
-
-Machine Learning Libraries
-
-Author
-
-Maximilian Knapp
-
-Data Science Student
+Maximilian Knapp\
+Data Science Student\
 IMC University of Applied Sciences Krems
