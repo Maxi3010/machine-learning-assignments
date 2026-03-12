@@ -1,0 +1,113 @@
+---
+title: "Assignment 3.1 – K-Means Color Reduction"
+author: "Maximilian Knapp"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jpeg)
+library(imager)
+library(ggplot2)
+library(gridExtra)
+library(tidyverse)
+```
+
+## 1. Bild laden und verkleinern
+
+```{r}
+# Set working directory - adjust this path to your local environment
+# setwd("C:/Users/maxim/OneDrive - IMC/Informatik/4. Semester/Machine Learning/Assignment")
+img_path <- "Phone_picture.jpg"  # Update this path to your image location
+img <- load.image(img_path)
+
+# Resize to 256x256
+img_resized <- resize(img, 256, 256)
+
+# Display the resized image
+plot(img_resized, main = "Resized Original Image")
+```
+
+## 2. Daten vorbereiten
+
+```{r}
+# Convert image to data frame
+img_df <- as.data.frame(img_resized, wide = "c")  # RGB-Kanäle extrahieren
+colnames(img_df) <- c("x", "y", "R", "G", "B")
+
+# Extract only the color information
+pixels <- img_df[, c("R", "G", "B")]
+```
+
+## 3. Elbow-Methode: Bestes k bestimmen
+
+```{r}
+# Calculate WSS for different values of K
+wss <- numeric()
+k_max <- 10
+set.seed(123)  # For reproducibility
+
+for (k in 1:k_max) {
+  km <- kmeans(pixels, centers = k, nstart = 5)
+  wss[k] <- km$tot.withinss
+}
+
+# Plot WSS vs. K
+plot(1:k_max, wss, type = "b", pch = 19,
+     xlab = "Anzahl Cluster K",
+     ylab = "WSS (within-cluster sum of squares)",
+     main = "Elbow Plot zur Wahl von K")
+```
+
+## 4. K-Means Segmentierung für verschiedene Ks
+
+```{r}
+# Apply K-means for different values of K
+# Apply K-means for different values of K
+k_values <- c(2, 4, 6, 8)
+par(mfrow = c(2, 2))  # 2x2 Anordnung
+
+for (k in k_values) {
+  set.seed(123)
+  km <- kmeans(pixels, centers = k, nstart = 5)
+  
+  clustered_img <- img_df
+  clustered_img$R <- km$centers[km$cluster, 1]
+  clustered_img$G <- km$centers[km$cluster, 2]
+  clustered_img$B <- km$centers[km$cluster, 3]
+  
+  # Kanäle als separate Matrizen erzeugen
+  R <- as.cimg(matrix(clustered_img$R, nrow = 256, byrow = TRUE))
+  G <- as.cimg(matrix(clustered_img$G, nrow = 256, byrow = TRUE))
+  B <- as.cimg(matrix(clustered_img$B, nrow = 256, byrow = TRUE))
+  
+  # Kombinieren der Kanäle zu einem Farbbild
+  clustered_cimg <- imappend(list(R, G, B), "c")
+  
+  # Bild anzeigen
+  plot(clustered_cimg, main = paste("K =", k))
+}
+```
+
+## 5. Originalbild zur Vergleich
+
+```{r}
+# Reset plot parameters
+par(mfrow = c(1, 1))
+plot(img_resized, main = "Original Image (for comparison)")
+```
+
+## 6. Analysis and Discussion
+
+Based on the elbow plot, we can observe that the "elbow" appears around K=4 to K=6, suggesting this is the optimal range for clustering colors in this image. After K=6, adding more clusters provides diminishing returns in reducing the within-cluster sum of squares.
+
+**Visual analysis of different K values:**
+
+- **K=2**: The image is reduced to just two colors, primarily distinguishing between the paper and the cork board background. All texture details are lost, but the basic structure is preserved.
+- **K=4**: We can now see better separation between the main elements: the cork board, the white paper, the dark text, and potentially shadow areas. This preserves essential information while significantly reducing the color palette.
+- **K=6**: More subtle color variations become visible, especially in the cork texture. The image looks more natural while still having a noticeably reduced color palette.
+- **K=8**: Even more color nuances are captured. The cork board's texture shows greater variation, and the overall image appears closer to the original. However, the improvement from K=6 to K=8 is less dramatic than from K=4 to K=6.
+
+**Conclusion**: For this particular image, K=6 appears to be the optimal choice as it provides a good balance between color reduction and visual quality. The image contains several distinct elements (cork board, paper, text, frame) that are well-captured with this number of clusters.
+
+This technique demonstrates how K-means clustering can effectively reduce the number of colors in an image while preserving its essential visual information. Such color quantization can be useful for file size reduction, image stylization, and segmentation tasks.

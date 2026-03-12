@@ -1,0 +1,116 @@
+---
+title: "Seed Classification using Decision Trees"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+set.seed(123)
+```
+
+## **1. Load Required Libraries**
+```{r}
+library(ggplot2)
+library(rpart)
+library(rpart.plot)
+library(caret)
+library(gridExtra)
+```
+
+## **2. Load and Inspect Data**
+```{r}
+# Read the dataset
+seeds <- read.csv("seeds.csv", header = TRUE)
+
+# Convert Class to factor
+seeds$Class <- factor(seeds$Class)
+
+# Display dataset structure
+str(seeds)
+
+# Summary statistics
+summary(seeds)
+
+# Check for missing values
+print(colSums(is.na(seeds)))
+```
+
+## **3. Handle Missing Values**
+```{r}
+# Impute missing values (replace with median)
+seeds$Eccentricity[is.na(seeds$Eccentricity)] <- median(seeds$Eccentricity, na.rm = TRUE)
+seeds$Solidity[is.na(seeds$Solidity)] <- median(seeds$Solidity, na.rm = TRUE)
+
+# Verify missing values are handled
+print(colSums(is.na(seeds)))
+```
+
+## **4. Split Data into Training & Testing Sets**
+```{r}
+# 80% Training, 20% Testing
+trainIndex <- createDataPartition(seeds$Class, p = 0.8, list = FALSE)
+trainData <- seeds[trainIndex, ]
+testData <- seeds[-trainIndex, ]
+```
+
+## **5. Build Decision Tree Model**
+```{r}
+# Default Decision Tree
+tree_default <- rpart(Class ~ ., data = trainData, method = "class")
+
+# Plot the tree
+rpart.plot(tree_default, main = "Default Decision Tree")
+```
+
+## **6. Fully Grown Decision Tree**
+```{r}
+# Fully grown tree (no stopping criteria)
+tree_full <- rpart(Class ~ ., data = trainData, method = "class", control = rpart.control(minsplit = 2, cp = 0))
+
+# Visualize the fully grown tree
+rpart.plot(tree_full, main = "Fully Grown Decision Tree")
+```
+
+## **7. Prune the Decision Tree**
+```{r}
+# Check complexity parameter (cp)
+printcp(tree_full)
+
+# Prune using cp = 0.005
+tree_pruned <- prune(tree_full, cp = 0.005)
+
+# Visualize the pruned tree
+rpart.plot(tree_pruned, main = "Pruned Decision Tree")
+```
+
+## **8. Model Evaluation - Confusion Matrix**
+```{r}
+# Predictions on test set
+pred_pruned <- predict(tree_pruned, testData, type = "class")
+
+# Convert actual and predicted values to factors with matching levels
+actual <- factor(testData$Class)
+predicted <- factor(as.character(pred_pruned), levels = levels(actual))
+
+# Compute confusion matrix
+conf_matrix <- confusionMatrix(predicted, actual)
+print(conf_matrix)
+```
+
+## **9. Accuracy & Model Performance**
+```{r}
+# Extract Accuracy and Kappa
+accuracy <- conf_matrix$overall["Accuracy"]
+kappa <- conf_matrix$overall["Kappa"]
+
+# Print results
+cat("**Model Accuracy:**", round(accuracy * 100, 2), "%\n")
+cat("**Kappa Statistic:**", round(kappa, 3), "\n")
+```
+
+## **10. Conclusion**
+The decision tree model achieves **`r round(accuracy * 100, 2)`%** accuracy with a **Kappa of `r round(kappa, 3)`**. If interpretability is a priority, this model is a great choice. If higher accuracy is needed, other models like **Random Forest or SVM** may be explored.
+
+
